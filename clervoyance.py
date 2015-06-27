@@ -42,7 +42,6 @@ def loadSchools():
 		if select.get('value'):
 			school_writer.writerow([str(datetime.now()),select.get('value'),select.get_text()])
 
-
 #If the school doesn't already exist in the database, navigate to the page and download all new reports
 
 #If the school exists in the database, navigate to the page and check if the reports listed match those in the database
