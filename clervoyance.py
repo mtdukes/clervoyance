@@ -43,7 +43,15 @@ def loadSchools():
 			#If the school doesn't exist in the database, add it
 			if select.get('value') not in values_in_page:
 				school_writer.writerow([str(datetime.now()),select.get('value'),select.get_text()])
+				values_in_page.append(select.get('value'))
+				schools_in_page.append(select.get_text())
 
+	#loop through all the file locations and download each file to a directory
+	#for value in values_in_page:
+	##NOTE: Take a closer look at the hidden divs with id=school. They've got a mistake in their code that messes the divs up, but this may be a better way to navigate through the files
+
+
+###TODO###
 #If the school doesn't already exist in the database, navigate to the page and# download all new reports
 
 #If the school exists in the database, navigate to the page and check if the reports listed match those in the database
