@@ -1,12 +1,13 @@
 import urllib2, urllib
 from bs4 import BeautifulSoup
 import re, csv, os.path
+from datetime import datetime
 
 #Load the existing csv data, if it exists
 def loadSchools():
 	if not os.path.isfile('/Users/mtdukes/Documents/development/clervoyance/source/schools.csv'):
 		school_writer = csv.writer(open('/Users/mtdukes/Documents/development/clervoyance/source/schools.csv','wb'))
-		school_writer.writerow(['dl_time', 'school', 'subhead', 'file_name','file_url'])
+		school_writer.writerow(['dl_time', 'anchor_value', 'school', 'subhead', 'file_name','file_url'])
 		print 'ALERT: New database created...'
 	#if log.csv exists, alert user that future entries will append onto existing file
 	else:
@@ -24,12 +25,14 @@ def loadSchools():
 
 	soup = BeautifulSoup(html)
 
-	#Load schools listed in the <select> tag with id="schoolDD"
+	#Load schools listed in the <select> tag with id="schoolDD" and a value
 	schools_in_page = []
+	values_in_page = []
 	for select in soup.find('select',id=re.compile('schoolDD')):
 		if select.get('value'):
 			schools_in_page.append(select.get_text())
-	print schools_in_page
+			values_in_page.append(select.get('value'))
+			school_writer.writerow([str(datetime.now()),select.get('value'),select.get_text()])
 
 
 #If the school doesn't already exist in the database, navigate to the page and download all new reports
