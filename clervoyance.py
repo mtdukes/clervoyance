@@ -1,6 +1,6 @@
 import urllib2, urllib
 from bs4 import BeautifulSoup
-import csv, os.path
+import re, csv, os.path
 
 #Load the existing csv data, if it exists
 def loadSchools():
@@ -24,8 +24,13 @@ def loadSchools():
 
 	soup = BeautifulSoup(html)
 
+	#Load schools listed in the <select> tag with id="schoolDD"
+	schools_in_page = []
+	for select in soup.find('select',id=re.compile('schoolDD')):
+		if select.get('value'):
+			schools_in_page.append(select.get_text())
+	print schools_in_page
 
-#Load schools listed in the <select> tag with id="schoolDD"
 
 #If the school doesn't already exist in the database, navigate to the page and download all new reports
 
