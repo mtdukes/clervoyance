@@ -5,18 +5,30 @@ from datetime import datetime
 
 #Load the existing csv data, if it exists
 def loadSchools():
-	if not os.path.isfile('/Users/mtdukes/Documents/development/clervoyance/source/schools.csv'):
-		school_writer = csv.writer(open('/Users/mtdukes/Documents/development/clervoyance/source/schools.csv','wb'))
+	#declare a few variables
+	values_in_page = []
+	schools_in_page = []
+	file_path = '/Users/mtdukes/Documents/development/clervoyance/source/schools.csv'
+	clery_url = 'https://studentaid.ed.gov/sa/about/data-center/school/clery-act'
+
+	#check if a database exists
+	if not os.path.isfile(file_path):
+		school_writer = csv.writer(open(file_path,'wb'))
 		school_writer.writerow(['dl_time', 'anchor_value', 'school', 'subhead', 'file_name','file_url'])
 		print 'ALERT: New database created...'
-	#if log.csv exists, alert user that future entries will append onto existing file
 	else:
-		school_writer = csv.writer(open('/Users/mtdukes/Documents/development/clervoyance/source/schools.csv','a'))
+		#read in values of existing spreadsheet and store them in an array
+		school_reader = csv.reader(open(file_path,'rU'),delimiter=',')
+		for row in school_reader:
+			values_in_page.append(row[1])
+			schools_in_page.append(row[2])
+		#if log.csv exists, alert user that future entries will append onto existing file
+		school_writer = csv.writer(open(file_path,'a'))
 		print 'ALERT: database exists, appending...'
 
 	#Read in the DOE Clery act page
 	try:
-		response = urllib2.urlopen('https://studentaid.ed.gov/sa/about/data-center/school/clery-act')
+		response = urllib2.urlopen(clery_url)
 		html = response.read()
 		print 'ALERT: Page successfully opened'
 	except:
@@ -26,12 +38,8 @@ def loadSchools():
 	soup = BeautifulSoup(html)
 
 	#Load schools listed in the <select> tag with id="schoolDD" and a value
-	schools_in_page = []
-	values_in_page = []
 	for select in soup.find('select',id=re.compile('schoolDD')):
 		if select.get('value'):
-			schools_in_page.append(select.get_text())
-			values_in_page.append(select.get('value'))
 			school_writer.writerow([str(datetime.now()),select.get('value'),select.get_text()])
 
 
