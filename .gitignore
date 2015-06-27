@@ -1,4 +1,6 @@
 #Ignore these directories
+data/
+source/
 
 #ignore these files
 .DS_Store
