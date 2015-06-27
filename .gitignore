@@ -4,4 +4,4 @@ source/
 
 #ignore these files
 .DS_Store
-.csv
+*.csv
